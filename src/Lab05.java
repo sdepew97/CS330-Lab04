@@ -1,4 +1,4 @@
-import java.io.BufferedReader;g
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystems;
@@ -12,32 +12,33 @@ public class Lab05 {
     public static HashMap<String, ArrayList<String>> dictionary = new HashMap<>();
     public static String filePath = "/usr/share/dict/words";
     public static int NUM_CHARS = 256;
-    public static ArrayList<String> anagrams = new ArrayList<>();
+    public static ArrayList<String> result = new ArrayList<>();
+
 
     public static void main(String args[]) {
         //for all words, read word, sort, and insert into hashmap
         readWords(filePath);
 
         //get a word and search for it
-        anagrams = searchWord("pickel");
+        result = searchWord("diapers");
 
         //print list of anagrams
-        if(anagrams.size()>0) {
-            printList(anagrams);
+        if (result != null) {
+            printList(result);
         }
 
         //exit/done
     }
 
     private static void printList(ArrayList<String> anagrams) {
-        for(int i=0; i<anagrams.size(); i++) {
+        System.out.println("List size " + anagrams.size());
+        for (int i = 0; i < anagrams.size(); i++) {
             System.out.println(anagrams.get(i));
         }
     }
 
     public static ArrayList<String> searchWord(String word) {
-        ArrayList<String> returnList = new ArrayList<>();
-        returnList = dictionary.get(sortString(word));
+        ArrayList<String> returnList = dictionary.get(sortString(word));
         return returnList;
     }
 
@@ -45,23 +46,29 @@ public class Lab05 {
         Path path = FileSystems.getDefault().getPath("/usr/share/dict/", "words");
         try {
             BufferedReader reader = Files.newBufferedReader(path, StandardCharsets.US_ASCII);
-            String line = reader.readLine();
-            String sortedLine = new String();
-            ArrayList<String> anagrams = new ArrayList<>();
+            String line;
+            String word;
+            String sorted;
 
-            while (line != null) {
-                line = line.trim(); //remove any whitespace that could mess us up
-                sortedLine = sortString(line);
-                if (!dictionary.containsKey(sortedLine)) {
+            while ((line = reader.readLine()) != null) {
+//                if(line.trim().equals("praised"))
+//                    System.out.println("found");
+
+                //for(int i=0; i<10; i++){
+                word = line.trim();
+                sorted = sortString(word);
+                //System.out.println(sortedLine);
+                //System.out.println(dictionary.containsKey(sortedLine));
+                if (dictionary.containsKey(sorted)) {
+                    ArrayList<String> anagrams = dictionary.get(sorted);
                     anagrams.add(line);
-                    dictionary.put(sortedLine, anagrams);
+                    dictionary.put(sorted, anagrams);
                 } else {
-                    anagrams = dictionary.get(sortedLine);
+                    ArrayList<String> anagrams = new ArrayList<>();
                     anagrams.add(line);
-                    dictionary.put(sortedLine, anagrams);
+                    dictionary.put(sorted, anagrams);
                 }
 
-                line = reader.readLine();
             }
             reader.close();
         } catch (IOException e) {
@@ -69,6 +76,7 @@ public class Lab05 {
         }
     }
 
+    /* Method has been tested for correctness. */
     private static String sortString(String unsortedInput) {
         int[] charCounts = new int[NUM_CHARS]; //array to count the number of characters
         StringBuilder sortedInput = new StringBuilder();
@@ -83,6 +91,7 @@ public class Lab05 {
             }
         }
 
+        //System.out.println(sortedInput);
         return sortedInput.toString();
     }
 }
