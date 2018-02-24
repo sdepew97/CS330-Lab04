@@ -8,57 +8,59 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Lab05 {
-    //Global variables
+
+    /* Global variables */
     public static HashMap<String, ArrayList<String>> dictionary = new HashMap<>();
-    public static String filePath = "/usr/share/dict/words";
     public static int NUM_CHARS = 256;
     public static ArrayList<String> result = new ArrayList<>();
+    private static String testing[] = {"plekic", "diapers", "teardrop", "nameless", "allergy", "deepak", "impressions", "restrain", "calligraphy", "nepal", "stale", "parliaments", "sucrose", "persist", "disintegration"};
 
-
+    /* Main method that runs algorithm */
     public static void main(String args[]) {
         //for all words, read word, sort, and insert into hashmap
-        readWords(filePath);
+        readWords();
 
-        //get a word and search for it
-        result = searchWord("diapers");
+        for(int i=0; i<testing.length; i++) {
+            //get a word and search for it
+            result = searchWord(testing[i]);
 
-        //print list of anagrams
-        if (result != null) {
-            printList(result);
+            //print list of anagrams
+            if (result != null) {
+                printList(testing[i], result);
+            }
         }
 
         //exit/done
     }
 
-    private static void printList(ArrayList<String> anagrams) {
-        System.out.println("List size " + anagrams.size());
+    /* Method that prints a row of the output table. */
+    private static void printList(String input, ArrayList<String> anagrams) {
+        System.out.print("Anagrams for " + input + ":\t\t\t");
         for (int i = 0; i < anagrams.size(); i++) {
-            System.out.println(anagrams.get(i));
+            System.out.print(anagrams.get(i)+ "\t");
         }
+        System.out.println();
     }
 
+    /* Method that searches for the word in the dictionary. */
     public static ArrayList<String> searchWord(String word) {
         ArrayList<String> returnList = dictionary.get(sortString(word));
         return returnList;
     }
 
-    public static void readWords(String filePath) {
+    /* Method that reads from the file and loads the dictionary */
+    public static void readWords() {
         Path path = FileSystems.getDefault().getPath("/usr/share/dict/", "words");
         try {
-            BufferedReader reader = Files.newBufferedReader(path, StandardCharsets.US_ASCII);
+            BufferedReader reader = Files.newBufferedReader(path, StandardCharsets.ISO_8859_1);
             String line;
             String word;
             String sorted;
 
             while ((line = reader.readLine()) != null) {
-//                if(line.trim().equals("praised"))
-//                    System.out.println("found");
-
-                //for(int i=0; i<10; i++){
                 word = line.trim();
                 sorted = sortString(word);
-                //System.out.println(sortedLine);
-                //System.out.println(dictionary.containsKey(sortedLine));
+
                 if (dictionary.containsKey(sorted)) {
                     ArrayList<String> anagrams = dictionary.get(sorted);
                     anagrams.add(line);
@@ -76,7 +78,7 @@ public class Lab05 {
         }
     }
 
-    /* Method has been tested for correctness. */
+    /* Method that sorts the strings in alphabetical order. */
     private static String sortString(String unsortedInput) {
         int[] charCounts = new int[NUM_CHARS]; //array to count the number of characters
         StringBuilder sortedInput = new StringBuilder();
@@ -91,7 +93,6 @@ public class Lab05 {
             }
         }
 
-        //System.out.println(sortedInput);
         return sortedInput.toString();
     }
 }
