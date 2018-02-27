@@ -26,7 +26,12 @@ public class Lab05 {
 
             //print list of anagrams
             if (result != null) {
-                printList(testing[i], result);
+                if(result.size() == 1 && result.get(0).equals(testing[i])) {
+                    //in this case the list is simply the word itself, so we should not print the word as an anagram
+                    System.out.println("I am sorry, there are no anagrams for this word.");
+                } else {
+                    printList(testing[i], result);
+                }
             }
         }
 
@@ -37,7 +42,9 @@ public class Lab05 {
     private static void printList(String input, ArrayList<String> anagrams) {
         System.out.print("Anagrams for " + input + ":\t\t\t");
         for (int i = 0; i < anagrams.size(); i++) {
-            System.out.print(anagrams.get(i)+ "\t");
+            if(!anagrams.get(i).equals(input)) {
+                System.out.print(anagrams.get(i) + "\t");
+            }
         }
         System.out.println();
     }
